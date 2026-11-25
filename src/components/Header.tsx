@@ -12,7 +12,12 @@ export function Header() {
         <nav className="site-nav" aria-label="メイン">
           <Link href="/">見つける</Link>
         </nav>
-        {/* 投稿フォームは次のステップで追加します */}
+        <Link href="/me" className="header-link">
+          マイページ
+        </Link>
+        <Link href="/submit" className="btn btn--accent btn--sm">
+          ＋ 作品を載せる
+        </Link>
       </div>
     </header>
   );

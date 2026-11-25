@@ -17,6 +17,10 @@ export const metadata: Metadata = {
     locale: "ja_JP",
   },
   twitter: { card: "summary_large_image" },
+  // Google Search Console の所有権確認（Vercel の環境変数に値を入れると出力される）
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
