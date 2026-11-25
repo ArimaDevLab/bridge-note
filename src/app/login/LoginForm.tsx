@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabase } from "@/lib/supabase-browser";
 
@@ -65,6 +66,9 @@ export function LoginForm({ next }: { next: string }) {
         <button type="submit" className="btn btn--accent" disabled={busy}>
           ログイン
         </button>
+        <Link href="/forgot-password" className="hint" style={{ textDecoration: "underline", alignSelf: "flex-start" }}>
+          パスワードを忘れた方
+        </Link>
       </form>
       {error && (
         <p className="form-error" role="alert">
