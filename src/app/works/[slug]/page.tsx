@@ -170,7 +170,7 @@ export default async function WorkPage({ params }: PageProps<"/works/[slug]">) {
             )}
             {download && (
               <a className={web ? "btn btn--outline" : "btn btn--accent"} href={download} target="_blank" rel="noopener">
-                ダウンロード
+                {download.includes("chromewebstore.google.com") ? "Chrome ウェブストアで見る" : "ダウンロード"}
               </a>
             )}
             {official && (

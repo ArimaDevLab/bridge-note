@@ -29,7 +29,7 @@ export function platformText(w: {
   if (w.app_store_url) p.push("iOS");
   if (w.google_play_url) p.push("Android");
   if (w.web_url) p.push("Web");
-  if (w.download_url) p.push("デスクトップ");
+  if (w.download_url) p.push(w.download_url.includes("chromewebstore.google.com") ? "Chrome拡張" : "デスクトップ");
   return p.join(" / ");
 }
 
