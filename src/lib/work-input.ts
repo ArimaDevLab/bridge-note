@@ -16,6 +16,7 @@ export type WorkInput = {
   maker_note: string;
   tags: string[];
   icon_url: string | null;
+  thumbnail_url: string | null;
   screenshots: string[];
   app_store_url: string;
   google_play_url: string;
@@ -123,6 +124,7 @@ export function validateWork(input: WorkInput, categories: string[]): Validated 
         20,
       ),
       icon_url: cleanUrl(input.icon_url),
+      thumbnail_url: cleanUrl(input.thumbnail_url),
       screenshots,
       app_store_url: input.device === "pc" ? null : cleanUrl(input.app_store_url),
       google_play_url: input.device === "pc" ? null : cleanUrl(input.google_play_url),

@@ -11,7 +11,12 @@ export function WorkCard({ work, categoryName }: { work: WorkSummary; categoryNa
   return (
     <Link href={`/works/${work.slug}`} className="card">
       <div className="card__shot" style={{ background: t.bg }}>
-        <DeviceFrame device={work.device} shot={work.screenshots?.[0]} alt={`${work.name}の画面`} />
+        {work.thumbnail_url ? (
+          // eslint-disable-next-line @next/next/no-img-element -- 投稿者の画像URLは事前に分からない
+          <img className="card__thumb" src={work.thumbnail_url} alt={`${work.name}の紹介画像`} loading="lazy" />
+        ) : (
+          <DeviceFrame device={work.device} shot={work.screenshots?.[0]} alt={`${work.name}の画面`} />
+        )}
         <span className="card__badges">
           <span className="badge">{categoryName}</span>
           {work.audience === "business" && <span className="badge badge--dark">法人向け</span>}

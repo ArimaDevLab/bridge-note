@@ -5,7 +5,7 @@ import type { Category, Work, WorkSummary, WorkUpdate } from "./types";
 const REVALIDATE = 120; // 秒。投稿が一覧に反映されるまでの最大待ち時間
 
 const SUMMARY_COLUMNS =
-  "id, slug, name, tagline, category_slug, device, audience, stage, icon_url, screenshots, app_store_url, google_play_url, web_url, download_url, cheer_count, published_at, author:tm_profiles(handle, display_name, avatar_url)";
+  "id, slug, name, tagline, category_slug, device, audience, stage, icon_url, thumbnail_url, screenshots, app_store_url, google_play_url, web_url, download_url, cheer_count, published_at, author:tm_profiles(handle, display_name, avatar_url)";
 
 export type DeviceFilter = "all" | "phone" | "pc";
 export type AudienceFilter = "all" | "personal" | "business";

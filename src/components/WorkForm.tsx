@@ -41,6 +41,7 @@ function emptyInput(categories: Category[]): WorkInput {
     maker_note: "",
     tags: [],
     icon_url: null,
+    thumbnail_url: null,
     screenshots: [],
     app_store_url: "",
     google_play_url: "",
@@ -72,6 +73,7 @@ function fromWork(w: Work): WorkInput {
     maker_note: w.maker_note ?? "",
     tags: w.tags ?? [],
     icon_url: w.icon_url,
+    thumbnail_url: w.thumbnail_url ?? null,
     screenshots: w.screenshots ?? [],
     app_store_url: w.app_store_url ?? "",
     google_play_url: w.google_play_url ?? "",
@@ -108,11 +110,11 @@ export function WorkForm({
   const business = v.business ?? { plans: [{ name: "", price: "", note: "" }] };
   const setBiz = (patch: Partial<NonNullable<WorkInput["business"]>>) => set("business", { ...business, ...patch });
 
-  async function upload(files: FileList | null, kind: "icon" | "shot") {
+  async function upload(files: FileList | null, kind: "icon" | "thumb" | "shot") {
     if (!files || files.length === 0) return;
     setError(null);
     const sb = createBrowserSupabase();
-    const list = Array.from(files).slice(0, kind === "icon" ? 1 : LIMITS.screenshots - v.screenshots.length);
+    const list = Array.from(files).slice(0, kind === "shot" ? LIMITS.screenshots - v.screenshots.length : 1);
     const urls: string[] = [];
     for (const f of list) {
       if (!["image/png", "image/jpeg", "image/webp"].includes(f.type)) {
@@ -135,6 +137,7 @@ export function WorkForm({
     }
     setUploading(null);
     if (kind === "icon" && urls[0]) set("icon_url", urls[0]);
+    if (kind === "thumb" && urls[0]) set("thumbnail_url", urls[0]);
     if (kind === "shot" && urls.length) set("screenshots", [...v.screenshots, ...urls].slice(0, LIMITS.screenshots));
   }
 
@@ -281,6 +284,22 @@ export function WorkForm({
 
         <section className="form-card">
           <h2>4. 画像</h2>
+          <label className="upload upload--thumb">
+            {v.thumbnail_url ? (
+              <img src={v.thumbnail_url} alt="サムネイル" />
+            ) : (
+              <span>
+                ＋ サムネイル（一覧とシェアに使う横長の画像）
+                <small>横長 1200×630 がおすすめ。なければスクショの1枚目を使います</small>
+              </span>
+            )}
+            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => upload(e.target.files, "thumb")} />
+          </label>
+          {v.thumbnail_url && (
+            <button type="button" className="btn-add" onClick={() => set("thumbnail_url", null)}>
+              サムネイルを外す
+            </button>
+          )}
           <div className="upload-row">
             <label className="upload upload--icon">
               {v.icon_url ? <img src={v.icon_url} alt="アイコン" /> : <span>＋ アイコン<small>正方形 512px以上</small></span>}
@@ -429,7 +448,7 @@ export function WorkForm({
         <p className="form-side__title">一覧での見え方</p>
         <div className="card" style={{ pointerEvents: "none" }}>
           <div className="card__shot" style={{ background: t.bg }}>
-            <DeviceFrame device={v.device} shot={v.screenshots[0]} alt="" />
+            {v.thumbnail_url ? <img className="card__thumb" src={v.thumbnail_url} alt="" /> : <DeviceFrame device={v.device} shot={v.screenshots[0]} alt="" />}
             <span className="card__badges">
               <span className="badge">{catName}</span>
               {biz && <span className="badge badge--dark">法人向け</span>}

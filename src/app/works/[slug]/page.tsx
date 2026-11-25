@@ -29,7 +29,6 @@ export async function generateMetadata({ params }: PageProps<"/works/[slug]">): 
   const desc = work.description
     ? `${work.tagline}。${work.description.replace(/\s+/g, " ").slice(0, 90)}`
     : work.tagline;
-  const image = work.screenshots?.[0] ?? work.icon_url ?? undefined;
   return {
     title: `${work.name} — ${work.tagline}`,
     description: desc,
@@ -38,7 +37,6 @@ export async function generateMetadata({ params }: PageProps<"/works/[slug]">): 
       title: `${work.name} | ${site.name}`,
       description: work.tagline,
       url: `/works/${work.slug}`,
-      images: image ? [{ url: image }] : undefined,
     },
   };
 }
@@ -61,7 +59,7 @@ function jsonLd(work: Work, categoryName: string) {
         url,
         applicationCategory: categoryName,
         operatingSystem: os.length ? os.join(", ") : undefined,
-        image: work.icon_url ?? undefined,
+        image: work.thumbnail_url ?? work.icon_url ?? undefined,
         screenshot: work.screenshots?.length ? work.screenshots : undefined,
         datePublished: work.published_at ?? undefined,
         dateModified: work.updated_at,
@@ -198,7 +196,7 @@ export default async function WorkPage({ params }: PageProps<"/works/[slug]">) {
       {work.screenshots?.length > 0 && (
         <section className="shots" aria-label="スクリーンショット">
           {work.screenshots.map((src, i) =>
-            isPc && work.device === "pc" ? (
+            work.device !== "phone" ? (
               <figure key={src} className="shot-pc" style={{ margin: 0 }}>
                 <div className="shot-pc__bar" aria-hidden="true">
                   <span />

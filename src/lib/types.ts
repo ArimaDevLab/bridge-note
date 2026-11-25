@@ -39,6 +39,7 @@ export type WorkSummary = {
   audience: Audience;
   stage: Stage;
   icon_url: string | null;
+  thumbnail_url: string | null;
   screenshots: string[];
   app_store_url: string | null;
   google_play_url: string | null;
