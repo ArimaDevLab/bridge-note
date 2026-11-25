@@ -4,6 +4,16 @@ export function deviceLabel(d: Device): string {
   return d === "pc" ? "PC向け" : d === "both" ? "PC・スマホ" : "スマホ向け";
 }
 
+import type { Stage } from "./types";
+
+/** 公開中以外のときだけラベルを返す */
+export function stageLabel(s: Stage | null | undefined): string | null {
+  if (s === "beta") return "ベータ版";
+  if (s === "prototype") return "試作";
+  if (s === "preparing") return "販売準備中";
+  return null;
+}
+
 export function audienceLabel(a: Audience): string {
   return a === "business" ? "法人向け" : "個人向け";
 }

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { WorkSummary } from "@/lib/types";
-import { deviceLabel, platformText, tint } from "@/lib/labels";
+import { deviceLabel, platformText, stageLabel, tint } from "@/lib/labels";
 import { DeviceFrame } from "./DeviceFrame";
 import { HeartIcon } from "./icons";
 
 export function WorkCard({ work, categoryName }: { work: WorkSummary; categoryName: string }) {
   const t = tint(work.category_slug);
   const platform = platformText(work);
+  const stage = stageLabel(work.stage);
   return (
     <Link href={`/works/${work.slug}`} className="card">
       <div className="card__shot" style={{ background: t.bg }}>
@@ -14,6 +15,7 @@ export function WorkCard({ work, categoryName }: { work: WorkSummary; categoryNa
         <span className="card__badges">
           <span className="badge">{categoryName}</span>
           {work.audience === "business" && <span className="badge badge--dark">法人向け</span>}
+          {stage && <span className="badge badge--stage">{stage}</span>}
         </span>
       </div>
       <div className="card__body">

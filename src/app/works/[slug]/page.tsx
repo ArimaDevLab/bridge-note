@@ -10,7 +10,7 @@ import {
   listWorks,
   listWorksByAuthor,
 } from "@/lib/data";
-import { audienceLabel, deviceLabel, formatDate, safeUrl, tint } from "@/lib/labels";
+import { audienceLabel, deviceLabel, formatDate, safeUrl, stageLabel, tint } from "@/lib/labels";
 import { site, siteUrl } from "@/lib/site";
 import type { Work } from "@/lib/types";
 import { ExternalIcon, HeartIcon } from "@/components/icons";
@@ -106,6 +106,10 @@ export default async function WorkPage({ params }: PageProps<"/works/[slug]">) {
   const web = safeUrl(work.web_url);
   const download = safeUrl(work.download_url);
   const docUrl = safeUrl(biz.doc_url);
+  const official = safeUrl(work.official_url);
+  const stage = stageLabel(work.stage);
+  const hasStoreOrApp = Boolean(appStore || googlePlay || web || download);
+  const mentions = Array.isArray(work.media_mentions) ? work.media_mentions.filter((m) => m?.outlet) : [];
   const contact = biz.contact
     ? biz.contact.includes("@") && !biz.contact.startsWith("http")
       ? `mailto:${biz.contact}`
@@ -134,6 +138,7 @@ export default async function WorkPage({ params }: PageProps<"/works/[slug]">) {
           <div className="chips">
             {isBiz && <span className="badge badge--dark">法人向け</span>}
             <span className="badge badge--outline">{deviceLabel(work.device)}</span>
+            {stage && <span className="badge badge--stage">{stage}</span>}
           </div>
           <h1>{work.name}</h1>
           <p className="work-head__tagline">{work.tagline}</p>
@@ -166,6 +171,11 @@ export default async function WorkPage({ params }: PageProps<"/works/[slug]">) {
             {download && (
               <a className={web ? "btn btn--outline" : "btn btn--accent"} href={download} target="_blank" rel="noopener">
                 ダウンロード
+              </a>
+            )}
+            {official && (
+              <a className={hasStoreOrApp ? "btn btn--ghost" : "btn btn--accent"} href={official} target="_blank" rel="noopener">
+                作者のサイトで詳しく見る <ExternalIcon />
               </a>
             )}
             {isBiz && docUrl && (
@@ -249,6 +259,34 @@ export default async function WorkPage({ params }: PageProps<"/works/[slug]">) {
                   </div>
                 ))}
               </div>
+            </section>
+          )}
+          {mentions.length > 0 && (
+            <section>
+              <h2 className="section-title">掲載実績</h2>
+              <ul className="mentions">
+                {mentions.map((m, i) => {
+                  const href = safeUrl(m.url);
+                  const body = (
+                    <>
+                      <span className="mention__outlet">{m.outlet}</span>
+                      {m.title && <span>{m.title}</span>}
+                      {m.date && <span className="mention__date">{formatDate(m.date)}</span>}
+                    </>
+                  );
+                  return (
+                    <li key={i} className="mention">
+                      {href ? (
+                        <a href={href} target="_blank" rel="noopener">
+                          {body}
+                        </a>
+                      ) : (
+                        body
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
             </section>
           )}
           {work.maker_note && (

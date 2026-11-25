@@ -1,5 +1,8 @@
 export type Device = "phone" | "pc" | "both";
 export type Audience = "personal" | "business";
+export type Stage = "released" | "beta" | "prototype" | "preparing";
+
+export type MediaMention = { outlet: string; title?: string; url?: string; date?: string };
 
 export type Category = {
   slug: string;
@@ -34,6 +37,7 @@ export type WorkSummary = {
   category_slug: string;
   device: Device;
   audience: Audience;
+  stage: Stage;
   icon_url: string | null;
   screenshots: string[];
   app_store_url: string | null;
@@ -55,6 +59,8 @@ export type Work = WorkSummary & {
   environments: string[];
   price_text: string | null;
   business: BusinessInfo | null;
+  official_url: string | null;
+  media_mentions: MediaMention[];
   updated_at: string;
 };
 
